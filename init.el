@@ -1,18 +1,18 @@
-;; load emacs 24's package system. Add MELPA repository.
-(when (>= emacs-major-version 24)
-  (require 'package)
-  (add-to-list
-   'package-archives
-   ;; '("melpa" . "http://stable.melpa.org/packages/") ; many packages won't show if using stable
-   '("melpa" . "http://melpa.milkbox.net/packages/")
-   t))
+(require 'package)
 
-;; This is only needed once, near the top of the file
-(eval-when-compile
-  ;; Following line is not needed if use-package.el is in ~/.emacs.d
-  (add-to-list 'load-path "<path where use-package is installed>")
-  (require 'use-package))
+(setq package-enable-at-startup nil)
 
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+
+(add-to-list 'load-path "~/.emacs.d/site-lisp/use-package")
+(package-initialize)
+(require 'use-package)
+
+(with-eval-after-load 'info
+  (info-initialize)
+  (add-to-list 'Info-directory-list
+               "~/.emacs.d/site-lisp/use-package/"))
 
 (use-package slime
     :ensure t
@@ -20,3 +20,39 @@
     (setq inferior-lisp-program "/usr/bin/sbcl")
     (setq slime-contribs '(slime-fancy slime-asdf)))
 
+
+(defconst lisp-family-mode-hooks
+  '(emacs-lisp-mode-hook
+    eval-expression-minibuffer-setup-hook
+    ielm-mode-hook
+    lisp-mode-hook
+    lisp-interaction-mode-hook
+    scheme-mode-hook
+    clojure-mode-hook))
+
+(use-package paredit
+  :ensure t
+  :config
+  (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+  (dolist (hook lisp-family-mode-hooks)
+    (add-hook hook #'enable-paredit-mode)))
+
+(use-package rainbow-delimiters
+  :ensure t
+  :config
+  (dolist (hook lisp-family-mode-hooks)
+    (add-hook hook #'rainbow-delimiters-mode)))
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages (quote (rainbow-delimiters paredit slime))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
