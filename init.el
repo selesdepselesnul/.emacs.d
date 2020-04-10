@@ -49,6 +49,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("7111eb5bf050352a88a5bc6d8165cf5f18aa159a38c27e22d46d3bc39528255e" default)))
  '(package-selected-packages (quote (rainbow-delimiters paredit slime))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
